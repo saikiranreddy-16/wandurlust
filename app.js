@@ -2,6 +2,7 @@ const express=require("express");
 const app = express();
 const mongoose = require("mongoose");
 const Listing = require("../model/Lisitng.js");
+const path= require("path");
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/test";
 
@@ -17,23 +18,31 @@ async function main(){
     await mongoose.connect(MONGO_URL);
 }
 
+app.set("view engine","ejs");
+app.sdet("views",path.join(__dirname,"views"));
+
 app.get("/",(req,res)=>{
     res.send("This is root");
 });
 
-app.get("/testListing",(req,res)=>{
-    let sampleListing = new Listing({
-        title: "My new Villa",
-        description: "By the beach",
-        price: 1200,
-        location: "calangute, Goa",
-        country: "India",
-    });
-
-await sampleListing.save();
-console.log("sample was saved");
-res.send("successful testing");
+app.get("/Listings", async(req,res)=>{
+    const allListings = await Listing.find({});
+    res.render("/listigs/index.ejs",{allListings});
 });
+
+// app.get("/testListing",(req,res)=>{
+//     let sampleListing = new Listing({
+//         title: "My new Villa",
+//         description: "By the beach",
+//         price: 1200,
+//         location: "calangute, Goa",
+//         country: "India",
+//     });
+
+// await sampleListing.save();
+// console.log("sample was saved");
+// res.send("successful testing");
+// });
 app.listen(3030,()=>{
     console.log("server is listening to port 3030");
 });
