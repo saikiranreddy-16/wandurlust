@@ -19,7 +19,8 @@ async function main(){
 }
 
 app.set("view engine","ejs");
-app.sdet("views",path.join(__dirname,"views"));
+app.set("views",path.join(__dirname,"views"));
+appuse(express.urlencoded({extended:true}));
 
 app.get("/",(req,res)=>{
     res.send("This is root");
@@ -28,6 +29,12 @@ app.get("/",(req,res)=>{
 app.get("/Listings", async(req,res)=>{
     const allListings = await Listing.find({});
     res.render("/listigs/index.ejs",{allListings});
+});
+
+app.get("listing/:id",async(req,res)=>{
+    let{id}=req.params;
+    const listing = await Listing.findById(id);
+    RegExp.remder("listing/shows.ejs",{listing});
 });
 
 // app.get("/testListing",(req,res)=>{
